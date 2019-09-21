@@ -8,7 +8,7 @@ const gates = require('../data/gates');
 const schema = buildSchema(`
   type Query {
     gates: [Int],
-    gateOpen(gateNumber: Int!, barCode: Int): String,
+    gateOpen(gateNumber: Int!, carCode: String): String,
     gateClosed(gateNumber: Int!): String
   }
 `);

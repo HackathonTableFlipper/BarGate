@@ -4,10 +4,12 @@ import time
 start = 500
 end = 1000
 step = 1
+
 servo = 22
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(servo,GPIO.OUT)
+
 # in servo motor,
 # 1ms pulse for 0 degree (LEFT)
 # 1.5ms pulse for 90 degree (MIDDLE)
@@ -19,6 +21,7 @@ GPIO.setup(servo,GPIO.OUT)
 # duty cycle for 180 degree = (2/20)*100 = 10%
 
 p=GPIO.PWM(servo,50) # 50hz frequency
+
 p.start(2.5) # starting duty cycle (it set the servo to 0 degree)
 
 def openGate():

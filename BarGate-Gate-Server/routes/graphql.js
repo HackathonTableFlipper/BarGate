@@ -21,7 +21,7 @@ const APIServerIP = "10.200.24.232"
 // The root provides a resolver function for each API endpoint
 const root = {
     gateOpen: ({barCode}) => {
-        gateTimer = Date.Now()
+        gateTimer = Date.now()
         isGateOpen = true
         // TODO open gate via python
         // TODO light green light
@@ -42,7 +42,7 @@ module.exports = graphqlHTTP({
 });
 
 setInterval(() => {
-    if(isGateOpen && Date.Now() - gateTimer > timeGateIsOpenInMs)
+    if(isGateOpen && Date.now() - gateTimer > timeGateIsOpenInMs)
     {
         // TODO close Gate via python
         // TODO light red light        

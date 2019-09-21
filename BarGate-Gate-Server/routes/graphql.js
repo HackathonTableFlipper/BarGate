@@ -1,5 +1,7 @@
 const graphqlHTTP = require('express-graphql');
 const { buildSchema } = require('graphql');
+const PythonShell = require('python-shell');
+const spawn = require('child_process').spawn;
 
 const request = require('../bin/request');
 
@@ -25,14 +27,14 @@ const root = {
         isGateOpen = true
         // TODO open gate via python
         console.info("opened gate")
-        // TODO light green light
+        spawn('python', ['./../Trafficlight/LED.py', '010'])
         console.info("switched light to green")
         console.info("Barcode: "+barCode+" can go")
         return "OK";
     },
     message : ({message}) => {
         console.info("received Message:"+ message);
-        // TODO light yellow light
+        spawn('python', ['./../Trafficlight/LED.py', '110'])
         console.info("switched light to yellow")
         return "OK";
     }
@@ -49,7 +51,7 @@ setInterval(() => {
     {
         // TODO close Gate via python
         console.info("closing gate")
-        // TODO light red light   
+        spawn('python', ['./../Trafficlight/LED.py', '100'])
         console.info("switched light to red")     
         request.gateClosed(APIServerIP, gateNumber)
         console.info("informing api server")

@@ -13,6 +13,7 @@
     "express-graphql": "^0.9.0",
     "graphql": "^14.5.7",
     "instascan": "^1.0.0",
+    "python-shell": "^1.0.8",
     "request": "^2.81.0"
   }
 }

@@ -18,4 +18,4 @@ try:
         GPIO.output(GREEN,int(request[1]))
         GPIO.output(BLUE,int(request[2]))
 except KeyboardInterrupt:
-GPIO.cleanup()
+    GPIO.cleanup()

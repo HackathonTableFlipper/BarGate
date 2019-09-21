@@ -14,6 +14,7 @@ try:
   while (True): 
       request = input("RGB—>") 
       if (len(request) == 3): 
+        print(request)
         GPIO.output(RED,int(request[0]))
         GPIO.output(GREEN,int(request[1]))
         GPIO.output(BLUE,int(request[2]))

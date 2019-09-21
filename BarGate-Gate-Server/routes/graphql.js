@@ -8,7 +8,7 @@ const request = require('../bin/request');
 // Construct a schema, using GraphQL schema language
 const schema = buildSchema(`
   type Query {
-    gateOpen(barCode: String!): String,
+    open(barCode: String!): String,
     message(message: String!): String
   }
 `);
@@ -22,19 +22,20 @@ const APIServerIP = "10.200.24.232"
 
 // The root provides a resolver function for each API endpoint
 const root = {
-    gateOpen: ({barCode}) => {
+    open: ({barCode}) => {
         gateTimer = Date.now()
+	if(isGateOpen) return 'Already Open!';
         isGateOpen = true
-        // TODO open gate via python
+	spawn('python', ['./../ServoControl.py', 'open'])
         console.info("opened gate")
         spawn('python', ['./../Trafficlight/LED.py', '010'])
         console.info("switched light to green")
         console.info("Barcode: "+barCode+" can go")
         return "OK";
     },
-    message : ({message}) => {
+    message: ({message}) => {
         console.info("received Message:"+ message);
-        spawn('python', ['./../Trafficlight/LED.py', '110'])
+        spawn('python', ['./../Trafficlight/LED.py', '001'])
         console.info("switched light to yellow")
         return "OK";
     }
@@ -47,14 +48,19 @@ module.exports = graphqlHTTP({
 });
 
 setInterval(() => {
-    if(isGateOpen && Date.now() - gateTimer > timeGateIsOpenInMs)
+    if (!isGateOpen)
     {
-        // TODO close Gate via python
+	return
+    }
+    // TODO check LAZOR
+    if(Date.now() - gateTimer > timeGateIsOpenInMs)
+    {       
+	spawn('python', ['./../ServoControl.py', 'close'])
         console.info("closing gate")
         spawn('python', ['./../Trafficlight/LED.py', '100'])
         console.info("switched light to red")     
-        request.gateClosed(APIServerIP, gateNumber)
+        // request.gateClosed(APIServerIP, gateNumber)
         console.info("informing api server")
         isGateOpen = false;
-    }
+    }    
 }, 2000)

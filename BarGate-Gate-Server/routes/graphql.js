@@ -9,8 +9,7 @@ const request = require('../bin/request');
 const schema = buildSchema(`
   type Query {
     open(barCode: String!): String,
-    message(message: String!): String,
-    blocked(blocked: Boolean!): String
+    message(message: String!): String
   }
 `);
 
@@ -54,6 +53,13 @@ setInterval(() => {
 	return
     }
     // TODO check LAZOR
+    spawn('python', ['./../LightBarrier.py'])
+    pythonProcess.stdout.on('data', (data) => {
+        if(data | 0)
+	{
+             gateTimer = Date.now()
+	}
+    });
     if(Date.now() - gateTimer > timeGateIsOpenInMs)
     {       
 	spawn('python', ['./../ServoControl.py', 'close'])

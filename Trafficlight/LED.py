@@ -48,6 +48,7 @@ def loop():
         for col in colors:
             setColor(col)
             time.sleep(1)
+            print("new color" +  col.str())
 
 def destroy():
     p_R.stop()

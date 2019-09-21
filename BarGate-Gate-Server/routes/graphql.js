@@ -28,7 +28,7 @@ const root = {
         console.info("Barcode: "+barCode+" can go")
         return "OK";
     },
-    gateMessage : ({message}) => {
+    message : ({message}) => {
         console.info(message);
         // TODO light yellow light
         return "OK";
@@ -47,6 +47,7 @@ setInterval(() => {
         // TODO close Gate via python
         // TODO light red light        
         request.gateClosed(APIServerIP, gateNumber)
+        console.info("closing gate")
         isGateOpen = false;
     }
 }, 2000)

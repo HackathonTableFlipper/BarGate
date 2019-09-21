@@ -1,9 +1,11 @@
 import RPi.GPIO as GPIO
 import time
+import sys
 
 start = 500
 end = 1000
 step = 1
+input = str(sys.argv)
 
 servo = 22
 
@@ -25,23 +27,33 @@ p=GPIO.PWM(servo,50) # 50hz frequency
 p.start(2.5) # starting duty cycle (it set the servo to 0 degree)
 
 def openGate():
-	for x in range(start,end,step):
-			p.ChangeDutyCycle(x/100.0)
-			time.sleep(0.01)
-	print "Gate opened"
+#	for x in range(start,end,step):
+#			p.ChangeDutyCycle(x/100.0)
+#			time.sleep(0.01)
+	print("Gate opened")
 
 def closeGate():
-	for x in range(end,start,-step):
-			p.ChangeDutyCycle(x/100.0)
-			time.sleep(0.01)
-	print "Gate closed"
+#	for x in range(end,start,-step):
+#			p.ChangeDutyCycle(x/100.0)
+#			time.sleep(0.01)
+	print("Gate closed")
 
 try:
-	while True:
-			openGate()
-			time.sleep(2)
-			closeGate()
-			time.sleep(2)
+	print("Script name: ", sys.argv[0])
+	print("Number of Arguments: ", len(sys.argv))
+	print("Argum(ent/-s: ", str(sys.argv))
+	
+	if input == open:
+		openGate()
+	
+	if input == close:
+		closeGate()
+
+#	while True:
+#			openGate()
+#			time.sleep(2)
+#			closeGate()
+#			time.sleep(2)
 
 except KeyboardInterrupt:
     GPIO.cleanup()

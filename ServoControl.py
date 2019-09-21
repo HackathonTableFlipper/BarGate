@@ -22,18 +22,32 @@ p=GPIO.PWM(servo,50)# 50hz frequency
 
 p.start(2.5)# starting duty cycle ( it set the servo to 0 degree )
 
+def openGate(): 
+	p.ChangeDutyCycle(control[1])
+	print "Gate opened"
+	
+def closeGate(): 
+	p.ChangeDutyCycle(control[2])
+	print "Gate closed"
+	
+	
+try:	
+	openGate()
+	time.sleep(5)
+	closeGate()
+	
+#      while True:
+#         for x in range(11):
+#             p.ChangeDutyCycle(control[x])
+#             time.sleep(0.03)
+#             print x
+#           
+#           for x in range(9,0,-1):
+#             p.ChangeDutyCycle(control[x])
+#             time.sleep(0.03)
+#             print x
 
-try:
-       while True:
-           for x in range(11):
-             p.ChangeDutyCycle(control[x])
-             time.sleep(0.03)
-             print x
-           
-           for x in range(9,0,-1):
-             p.ChangeDutyCycle(control[x])
-             time.sleep(0.03)
-             print x
+
            
 except KeyboardInterrupt:
     GPIO.cleanup()

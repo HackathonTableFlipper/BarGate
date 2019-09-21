@@ -9,7 +9,8 @@ const request = require('../bin/request');
 const schema = buildSchema(`
   type Query {
     open(barCode: String!): String,
-    message(message: String!): String
+    message(message: String!): String,
+    blocked(blocked: Boolean!): String
   }
 `);
 

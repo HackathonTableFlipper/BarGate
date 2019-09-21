@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 
-RECEIVER_PIN = 24
+RECEIVER_PIN = 27
 
 if __name__ == '__main__':
     GPIO.setmode(GPIO.BCM)

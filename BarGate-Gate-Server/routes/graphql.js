@@ -53,10 +53,11 @@ setInterval(() => {
 	return
     }
     // TODO check LAZOR
-    spawn('python', ['./../LightBarrier.py'])
+    pythonProcess = spawn('python', ['./../LightBarrier.py'])
     pythonProcess.stdout.on('data', (data) => {
+	console.info("light barrier state = "+ data)
         if(data | 0)
-	{
+	{	     
              gateTimer = Date.now()
 	}
     });

@@ -4,6 +4,7 @@
   "description": "BarGate API Server",
   "main": "index.js",
   "scripts": {
+  	"init": "openssl req -nodes -new -x509 -keyout server.key -out server.cert",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Jeffrey Bissel",
@@ -13,6 +14,7 @@
     "express-graphql": "^0.9.0",
     "graphql": "^14.5.7",
     "instascan": "^1.0.0",
+    "nodemon": "^1.19.2",
     "request": "^2.81.0"
   }
 }

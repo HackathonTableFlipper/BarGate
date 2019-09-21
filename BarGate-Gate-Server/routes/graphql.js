@@ -24,13 +24,16 @@ const root = {
         gateTimer = Date.now()
         isGateOpen = true
         // TODO open gate via python
+        console.info("opened gate")
         // TODO light green light
+        console.info("switched light to green")
         console.info("Barcode: "+barCode+" can go")
         return "OK";
     },
     message : ({message}) => {
-        console.info(message);
+        console.info("received Message:"+ message);
         // TODO light yellow light
+        console.info("switched light to yellow")
         return "OK";
     }
 };
@@ -45,9 +48,11 @@ setInterval(() => {
     if(isGateOpen && Date.now() - gateTimer > timeGateIsOpenInMs)
     {
         // TODO close Gate via python
-        // TODO light red light        
-        request.gateClosed(APIServerIP, gateNumber)
         console.info("closing gate")
+        // TODO light red light   
+        console.info("switched light to red")     
+        request.gateClosed(APIServerIP, gateNumber)
+        console.info("informing api server")
         isGateOpen = false;
     }
 }, 2000)

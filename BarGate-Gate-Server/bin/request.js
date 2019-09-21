@@ -3,16 +3,11 @@ const request = require('request');
 const gatePort = 8080;
 
 const COMMANDS = {
-    OPEN: 'open',
-    MESSAGE: 'message'
+    CLOSED: 'closed'
 };
 
-const gateOpen = (gateIP, barCode) => {
-    sendSimpleRequest(gateIP, gatePort, {command : COMMANDS.OPEN, barCode: barCode});
-};
-
-const gateMessage = (gateIP, message) => {
-    sendSimpleRequest(gateIP, gatePort, {command : COMMANDS.OPEN, message: message});
+const gateClosed = (apiIP, gateNumber) => {
+    sendSimpleRequest(apiIP, gatePort, {command : COMMANDS.CLOSED, gateNumber: gateNumber});
 };
 
 
@@ -27,6 +22,5 @@ const sendSimpleRequest = (ip, port, data = {}) => {
 };
 
 module.exports = {
-    gateOpen,
-    gateMessage
+    gateClosed
 };

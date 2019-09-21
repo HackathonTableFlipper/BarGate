@@ -18,9 +18,9 @@ const root = {
     gates: () => {
         return Object.keys(gates);
     },
-    gateOpen: ({gateNumber, barCode}) => {
-        if(barCode) {
-            request.gateOpen(gates[gateNumber].ip, barCode);
+    gateOpen: ({gateNumber, carCode}) => {
+        if(carCode) {
+            request.gateOpen(gates[gateNumber].ip, carCode);
         } else {
             request.gateMessage(gates[gateNumber].ip, 'no-barcode');
         }

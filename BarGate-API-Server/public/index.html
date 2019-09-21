@@ -28,7 +28,7 @@
 
             let params = new URLSearchParams(new URL(document.location).search.slice(1));
             if(params.has('debug')) {
-                document.querySelector('#debug').css('display', 'block');
+                document.querySelector('#debug').style = '';
             }
 
             const graphql = (query) => {
@@ -60,29 +60,31 @@
             const scanCallback = (result, err) => {
                 if (result) {
                     result = (result + '');
-                    const isResultGate = result.indexOf('gate:') === 0;
+                    const isGate = result.indexOf('gate:') === 0;
                     if(!gateCode) {
-                        if(!isResultGate)
+                        if(!isGate)
                             return alert('Scan GATE code first');
 
                         gateCode = result.replace('gate:', '');
-                    } else if(!carCode && !isResultGate) {
+                    } else if(!carCode && !isGate) {
                         carCode = result;
 
                         // send to BarGate-API
+                        debug(`{ gateOpen(gateNumber: ${gateCode}, carCode: "${carCode}") }`);
                         graphql(`{ gateOpen(gateNumber: ${gateCode}, carCode: "${carCode}") }`);
-                        gateCode = null;
-                        carCode = null;
+
+                        setTimeout( () => {
+                            gateCode = null;
+                            carCode = null;
+                        }, 1000);
                     }
 
                     updateActionText();
 
                     debug(result)
-                    // document.getElementById('result').textContent = result.text
                 }
                 if (err && !(err instanceof ZXing.NotFoundException)) {
                     debug(err)
-                    // document.getElementById('result').textContent = err
                 }
             };
 
@@ -96,11 +98,11 @@
                         let start = (id) => {
                             codeReader.reset();
                             codeReader.decodeFromInputVideoDeviceContinuously(id, 'video', scanCallback);
-                            debug(`Started continous decode from camera with id ${id}`)
+                            debug(`Started continous decode from camera with id ${id}`);
                         };
 
                         let camera;
-                        const sourceSelect = document.getElementById('sourceSelect')
+                        const sourceSelect = document.getElementById('sourceSelect');
 
                         if(videoInputDevices) {
                             camera = videoInputDevices[0];

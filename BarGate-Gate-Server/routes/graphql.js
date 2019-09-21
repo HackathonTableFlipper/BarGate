@@ -21,16 +21,19 @@ const APIServerIP = "10.200.24.232"
 // The root provides a resolver function for each API endpoint
 const root = {
     gateOpen: ({barCode}) => {
-        gateTimer = Date.Now()
+        gateTimer = Date.now()
         isGateOpen = true
         // TODO open gate via python
+        console.info("opened gate")
         // TODO light green light
+        console.info("switched light to green")
         console.info("Barcode: "+barCode+" can go")
         return "OK";
     },
-    gateMessage : ({message}) => {
-        console.info(message);
+    message : ({message}) => {
+        console.info("received Message:"+ message);
         // TODO light yellow light
+        console.info("switched light to yellow")
         return "OK";
     }
 };
@@ -42,11 +45,14 @@ module.exports = graphqlHTTP({
 });
 
 setInterval(() => {
-    if(isGateOpen && Date.Now() - gateTimer > timeGateIsOpenInMs)
+    if(isGateOpen && Date.now() - gateTimer > timeGateIsOpenInMs)
     {
         // TODO close Gate via python
-        // TODO light red light        
+        console.info("closing gate")
+        // TODO light red light   
+        console.info("switched light to red")     
         request.gateClosed(APIServerIP, gateNumber)
+        console.info("informing api server")
         isGateOpen = false;
     }
 }, 2000)

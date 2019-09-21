@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>BarGate</title>
+        <script type="text/javascript" src="/js/zxing_multi.min.js"></script>
+        <script type="text/javascript" src="/js/app.js"></script>
+    </head>
+    <body>
+        <h1>BarGate</h1>
+        <h2>Action: <span id="action"></span></h2>
+        <div id="debug" style="display: none;"></div>
+        <main class="wrapper" style="padding-top:2em">
+            <section class="container" id="demo-content">
+                <div>
+                    <video id="video" style="width: 100%; height: auto; border-radius: 15px"></video>
+                </div>
+                <div id="sourceSelectPanel" style="display:none">
+                    <label for="sourceSelect">Change video source:</label>
+                    <select id="sourceSelect" style="max-width:400px">
+                    </select>
+                </div>
+            </section>
+
+        </main>
+        <script type="text/javascript">
+            let gateCode = null;
+            let carCode = null;
+
+            let params = new URLSearchParams(new URL(document.location).search.slice(1));
+            if(params.has('debug')) {
+                document.querySelector('#debug').css('display', 'block');
+            }
+
+            const graphql = (query) => {
+                const xhr = new XMLHttpRequest();
+                const url = '/graphql';
+
+                xhr.open("POST", url, true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        var json = JSON.parse(xhr.responseText);
+                        console.log({json});
+                    }
+                };
+
+                xhr.send(JSON.stringify({query: query}));
+            };
+
+
+            const updateActionText = () => {
+                document.querySelector('#action').innerHTML = !gateCode ? 'scan GATE code' : !carCode ? 'scan CAR code' : '';
+            };
+
+            const debug = (text, append) => // console.info(text);
+                append
+                    ? document.querySelector('#debug').innerHTML += text
+                    : document.querySelector('#debug').innerHTML = text;
+
+            const scanCallback = (result, err) => {
+                if (result) {
+                    result = (result + '');
+                    const isResultGate = result.indexOf('gate:') === 0;
+                    if(!gateCode) {
+                        if(!isResultGate)
+                            return alert('Scan GATE code first');
+
+                        gateCode = result.replace('gate:', '');
+                    } else if(!carCode && !isResultGate) {
+                        carCode = result;
+
+                        // send to BarGate-API
+                        graphql(`{ gateOpen(gateNumber: ${gateCode}, carCode: "${carCode}") }`);
+                        gateCode = null;
+                        carCode = null;
+                    }
+
+                    updateActionText();
+
+                    debug(result)
+                    // document.getElementById('result').textContent = result.text
+                }
+                if (err && !(err instanceof ZXing.NotFoundException)) {
+                    debug(err)
+                    // document.getElementById('result').textContent = err
+                }
+            };
+
+            updateActionText();
+
+            window.addEventListener('load', function () {
+                const codeReader = new ZXing.BrowserMultiFormatReader();
+                console.log('ZXing code reader initialized');
+                codeReader.getVideoInputDevices()
+                    .then( (videoInputDevices) => {
+                        let start = (id) => {
+                            codeReader.reset();
+                            codeReader.decodeFromInputVideoDeviceContinuously(id, 'video', scanCallback);
+                            debug(`Started continous decode from camera with id ${id}`)
+                        };
+
+                        let camera;
+                        const sourceSelect = document.getElementById('sourceSelect')
+
+                        if(videoInputDevices) {
+                            camera = videoInputDevices[0];
+                            videoInputDevices.forEach( (c) => {
+                                if (!c.label) {
+                                    return true;
+                                }
+                                let name = c.label.toLowerCase();
+                                debug(name, true);
+                                if (name.indexOf('back') !== -1 || name.indexOf('rear') !== -1) {
+                                    camera = c;
+                                    return false;
+                                }
+                            });
+
+                            videoInputDevices.forEach((element) => {
+                                const sourceOption = document.createElement('option');
+                                sourceOption.text = element.label;
+                                sourceOption.value = element.deviceId;
+                                sourceSelect.appendChild(sourceOption)
+                            });
+
+                            sourceSelect.onchange = () => {
+                                start(sourceSelect.value);
+                            };
+
+                            const sourceSelectPanel = document.getElementById('sourceSelectPanel');
+                            sourceSelectPanel.style.display = 'block';
+                        }
+
+                        if(!camera) { alert('No cameras found.'); return; }
+                        start(camera.deviceId);
+                    })
+                    .catch((err) => {
+                        console.error(err)
+                    })
+            })
+        </script>
+    </body>
+</html>

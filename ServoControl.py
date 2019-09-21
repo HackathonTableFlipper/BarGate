@@ -1,11 +1,13 @@
 import RPi.GPIO as GPIO
 import time
 import sys
+import os.path
 
 start = 500
 end = 1000
 step = 1
 input = str(sys.argv)
+isGateOpen = open("IsGateOpen.txt", "w+")
 
 servo = 22
 
@@ -22,38 +24,54 @@ GPIO.setup(servo,GPIO.OUT)
 # duty cycle for 90 degree = (1.5/20)*100 = 7.5%
 # duty cycle for 180 degree = (2/20)*100 = 10%
 
+pos = 100
+
+try:
+	if not os.path.exists('IsGateOpen.txt'):
+		isGateOpn.write("false")
+	else:
+		isGateOpen.read()
+	if isGateOpen == "false":
+		pos = 1000
+	if isGateOpen == "true":
+		pos = 500
+except KeyboardInterrupt:
+		GPIO.cleanup()
+
 p=GPIO.PWM(servo,50) # 50hz frequency
 
-p.start(2.5) # starting duty cycle (it set the servo to 0 degree)
+p.start(pos) # starting duty cycle (it set the servo to 0 degree)
 
 def openGate():
-#	for x in range(start,end,step):
-#			p.ChangeDutyCycle(x/100.0)
-#			time.sleep(0.01)
+	for x in range(start,end,step):
+		p.ChangeDutyCycle(x/100.0)
+		time.sleep(0.01)
+	isGateOpen.write("true")
 	print("Gate opened")
 
 def closeGate():
-#	for x in range(end,start,-step):
-#			p.ChangeDutyCycle(x/100.0)
-#			time.sleep(0.01)
+	for x in range(end,start,-step):
+		p.ChangeDutyCycle(x/100.0)
+		time.sleep(0.01)
+	isGateOpen.write("false")
 	print("Gate closed")
 
 try:
 	print("Script name: ", sys.argv[0])
 	print("Number of Arguments: ", len(sys.argv))
-	print("Argum(ent/-s: ", str(sys.argv))
-	
-	if input == open:
+	print("Argument/-s: ", str(sys.argv))
+
+	if "open" in input:
 		openGate()
-	
-	if input == close:
+	if "close" in input:
 		closeGate()
 
-#	while True:
-#			openGate()
-#			time.sleep(2)
-#			closeGate()
-#			time.sleep(2)
+#try:
+#       while True:
+#		openGate()
+#		time.sleep(2)
+#		closeGate()
+#		time.sleep(2)
 
 except KeyboardInterrupt:
     GPIO.cleanup()

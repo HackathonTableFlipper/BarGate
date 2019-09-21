@@ -1,9 +1,9 @@
 import RPi.GPIO as GPIO
 
 GPIO.setmode(GPIO.BCM)
-RED = 11
-GREEN = 12
-BLUE = 13
+RED = 25
+GREEN = 24
+BLUE = 23
 GPIO.setup(RED,GPIO.OUT)
 GPIO.output(RED,0)
 GPIO.setup(GREEN,GPIO.OUT)

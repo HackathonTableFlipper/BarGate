@@ -23,11 +23,11 @@ p=GPIO.PWM(servo,50)# 50hz frequency
 p.start(2.5)# starting duty cycle ( it set the servo to 0 degree )
 
 def openGate(): 
-	p.ChangeDutyCycle(control[0])
+	p.ChangeDutyCycle(control[1])
 	print "Gate opened"
 	
 def closeGate(): 
-	p.ChangeDutyCycle(control[10])
+	p.ChangeDutyCycle(control[2])
 	print "Gate closed"
 	
 	

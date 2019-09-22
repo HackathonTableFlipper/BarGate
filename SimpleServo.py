@@ -3,7 +3,7 @@ import time
 import sys
 import os.path
 
-input = str(sys.argv)
+input = sys.argv
 
 servo = 22
 
@@ -12,15 +12,17 @@ GPIO.setup(servo,GPIO.OUT)
 
 p=GPIO.PWM(servo,50) # 50hz frequency
 
-if lent(input)>1:
+if len(input)>1:
     print("given position:" + input[1])
     pos = int(input[1])
-    if (pos < 0 || pos >= 100):
+    if 0 <=  pos <= 100:
+        p.start(pos)
+    else:
         print("pls provide a value to the sript, that is ranged between 0 and 100")
-        return
-    
-    p.start(pos)
+    p.start(0)
+    p.ChangeDutyCycle(pos)
+    GPIO.cleanup()
 else:
      print("pls provide a value to the sript, that is ranged between 0 and 100")
-except KeyboardInterrupt:
-    GPIO.cleanup()
+     GPIO.cleanup()
+

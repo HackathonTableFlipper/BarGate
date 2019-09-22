@@ -7,7 +7,7 @@ start = 0
 end = 100
 step = 1
 input = str(sys.argv)
-
+pos = 0
 servo = 22
 
 GPIO.setmode(GPIO.BCM)

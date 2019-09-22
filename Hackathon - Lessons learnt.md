@@ -35,3 +35,29 @@ Manchmal ist es per Stick einfach schneller als per Netz. Auch können die 3D Dr
 
 * Leere USB Sticks
 * Externe SSDs
+
+
+
+### Kleben
+
+Ein bisschen was eigenes zu haben, spart Zeit und Mühen!
+
+* Tesafilm (Handreißbar)
+* Print Stift
+* Duck-Tape
+* _alles andere haben sie da_
+
+
+
+### Programmiersprachen
+
+Skriptsprachen wie Python oder Javascript (z.b. als nodejs) machen einem das leben deutlich leichter.
+Schnelle Prototypen ohne Betrachtung von Edgecases sind Ideal für einen Hackathon!!
+
+
+
+* bei nodejs ist ```graphiql``` unglaublich praktisch
+* python kann mal eben queries und requests senden
+
+
+
